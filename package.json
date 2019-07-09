@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/jjmax75/node-weather-app#readme",
   "dependencies": {
-    "dotenv": "8.0.0"
+    "dotenv": "8.0.0",
+    "request": "2.88.0"
   }
 }
