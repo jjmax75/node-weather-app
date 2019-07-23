@@ -2,20 +2,19 @@ const request = require('request');
 
 const apiKey = process.env.DARK_SKY_API_KEY;
 
-const forecast = (coords, callback) => {
-	const url = `https://api.darksky.net/forecast/${apiKey}/${coords.lat},${coords.long}?units=si`;
-	console.log(url);
-	request({ url, json: true }, (error, response) => {
+const forecast = ({ lat, long, locationName }, callback) => {
+	const url = `https://api.darksky.net/forecast/${apiKey}/${lat},${long}?units=si`;
+	request({ url, json: true }, (error, { body }) => {
 		if (error) {
 			callback('Unable to connect to weather service.');
-		} else if (response.body.error) {
-			callback(`{response.body.code} - ${response.body.error}`);
+		} else if (body.error) {
+			callback(`{body.code} - ${body.error}`);
 		} else {
-			const description = response.body.daily.data[0].summary;
-			const { temperature, precipProbability } = response.body.currently;
+			const { summary: description } = body.daily.data[0];
+			const { temperature, precipProbability } = body.currently;
 			callback(
 				undefined,
-				`${description} It is currently ${temperature} degrees out. There is a ${precipProbability}% chance of rain.`,
+				`${locationName} - ${description} It is currently ${temperature} degrees out. There is a ${precipProbability}% chance of rain.`,
 			);
 		}
 	});
